@@ -21,7 +21,11 @@ import {
 } from '@nestjs/swagger';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
-import { CreatePositionDto, UpdatePositionDto, PositionResponseDto } from '../application/dtos';
+import {
+  CreatePositionDto,
+  UpdatePositionDto,
+  PositionResponseDto,
+} from '../application/dtos';
 import { CreatePositionCommand } from '../application/commands/create-position.command';
 import { UpdatePositionCommand } from '../application/commands/update-position.command';
 import { DeletePositionCommand } from '../application/commands/delete-position.command';
@@ -53,11 +57,13 @@ export class PositionController {
   @ApiNotFoundResponse({
     description: 'Parent position not found.',
   })
-  async create(
-    @Body() dto: CreatePositionDto,
-  ): Promise<PositionResponseDto> {
+  async create(@Body() dto: CreatePositionDto): Promise<PositionResponseDto> {
     return this.commandBus.execute(
-      new CreatePositionCommand(dto.name, dto.description, dto.parentId ?? null),
+      new CreatePositionCommand(
+        dto.name,
+        dto.description,
+        dto.parentId ?? null,
+      ),
     );
   }
 
@@ -107,7 +113,11 @@ export class PositionController {
     description:
       'Returns the position and all its children/descendants structured as a nested tree.',
   })
-  @ApiParam({ name: 'id', description: 'UUID of the parent position', type: String })
+  @ApiParam({
+    name: 'id',
+    description: 'UUID of the parent position',
+    type: String,
+  })
   @ApiOkResponse({
     description: 'Descendants retrieved successfully.',
     type: PositionResponseDto,
@@ -128,12 +138,18 @@ export class PositionController {
     description:
       'Updates the name, description, or parent of an existing position.',
   })
-  @ApiParam({ name: 'id', description: 'UUID of the position to update', type: String })
+  @ApiParam({
+    name: 'id',
+    description: 'UUID of the position to update',
+    type: String,
+  })
   @ApiOkResponse({
     description: 'Position updated successfully.',
     type: PositionResponseDto,
   })
-  @ApiNotFoundResponse({ description: 'Position or parent position not found.' })
+  @ApiNotFoundResponse({
+    description: 'Position or parent position not found.',
+  })
   async update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() dto: UpdatePositionDto,
@@ -154,15 +170,17 @@ export class PositionController {
     description:
       'Deletes a position. Fails with 409 Conflict if the position has child positions — reassign or remove children first.',
   })
-  @ApiParam({ name: 'id', description: 'UUID of the position to delete', type: String })
+  @ApiParam({
+    name: 'id',
+    description: 'UUID of the position to delete',
+    type: String,
+  })
   @ApiOkResponse({ description: 'Position deleted successfully.' })
   @ApiNotFoundResponse({ description: 'Position not found.' })
   @ApiConflictResponse({
     description: 'Position has children and cannot be deleted.',
   })
-  async delete(
-    @Param('id', new ParseUUIDPipe()) id: string,
-  ): Promise<void> {
+  async delete(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
     return this.commandBus.execute(new DeletePositionCommand(id));
   }
 }

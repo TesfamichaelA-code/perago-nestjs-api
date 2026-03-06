@@ -20,9 +20,7 @@ export class GetPositionHandler implements IQueryHandler<GetPositionQuery> {
     });
 
     if (!position) {
-      throw new NotFoundException(
-        `Position with ID "${query.id}" not found`,
-      );
+      throw new NotFoundException(`Position with ID "${query.id}" not found`);
     }
 
     return position;

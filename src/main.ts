@@ -5,6 +5,7 @@ import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors()
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -21,8 +22,8 @@ async function bootstrap() {
     .addTag('Positions')
     .build();
 
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  const documentFactory = () => SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, documentFactory);
 
   await app.listen(3000);
 }

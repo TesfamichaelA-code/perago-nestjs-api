@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: orga_structure
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: root
+      DB_DATABASE: orga_structure
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:

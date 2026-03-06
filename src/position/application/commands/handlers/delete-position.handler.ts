@@ -7,9 +7,7 @@ import { DeletePositionCommand } from '../delete-position.command';
 import { Position } from '../../../domain/position.entity';
 
 @CommandHandler(DeletePositionCommand)
-export class DeletePositionHandler
-  implements ICommandHandler<DeletePositionCommand>
-{
+export class DeletePositionHandler implements ICommandHandler<DeletePositionCommand> {
   constructor(
     @InjectRepository(Position)
     private readonly positionRepository: TreeRepository<Position>,

@@ -7,9 +7,7 @@ import { UpdatePositionCommand } from '../update-position.command';
 import { Position } from '../../../domain/position.entity';
 
 @CommandHandler(UpdatePositionCommand)
-export class UpdatePositionHandler
-  implements ICommandHandler<UpdatePositionCommand>
-{
+export class UpdatePositionHandler implements ICommandHandler<UpdatePositionCommand> {
   constructor(
     @InjectRepository(Position)
     private readonly positionRepository: TreeRepository<Position>,

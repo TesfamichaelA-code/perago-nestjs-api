@@ -7,9 +7,7 @@ import { CreatePositionCommand } from '../create-position.command';
 import { Position } from '../../../domain/position.entity';
 
 @CommandHandler(CreatePositionCommand)
-export class CreatePositionHandler
-  implements ICommandHandler<CreatePositionCommand>
-{
+export class CreatePositionHandler implements ICommandHandler<CreatePositionCommand> {
   constructor(
     @InjectRepository(Position)
     private readonly positionRepository: TreeRepository<Position>,
